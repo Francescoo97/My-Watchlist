@@ -16,7 +16,7 @@ function MovieList({ searchTerm }) {
         setLoading(true)
 
         // Chiave API OMDb
-        const API = 'e2b7199f' 
+        const API = import.meta.env.VITE_OMDB_KEY;
 
         const url = `https://www.omdbapi.com/?apikey=${API}&s=${encodeURIComponent(searchTerm)}`;
 
@@ -53,13 +53,10 @@ function MovieList({ searchTerm }) {
 
     }, [searchTerm])
 
-    if(loading) return <p>Caricamento...</p>
-    if(!movies.length) return <p>Nessun film trovato!</p>
-
     return (
         <div className="movie-grid">
             {loading && <p className="load-message">Caricamento...</p>}
-            {!loading && movies.length === 0 && <p className="load-message">Nessun film trovato!</p>}
+            {!loading && movies.length === 0 && searchTerm && (<p className="load-message">Nessun film trovato!</p>)}
             {movies.map(movie => (
                 <MovieCard key={movie.id} movie={movie} />
             ))}
