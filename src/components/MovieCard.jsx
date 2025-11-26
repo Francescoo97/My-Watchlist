@@ -1,11 +1,33 @@
+import { useState, useEffect } from "react"
+
 function MovieCard({ movie }) {
-     
-    // Aggiunge film ai preferiti salvando in LocalStorage
-    const addToPrefers = () => {
+
+    const [isFavorite, setIsFavorite] = useState(false)
+
+    useEffect(() => {
         const prefers = JSON.parse(localStorage.getItem('prefers')) || []
-        prefers.push(movie)
-        localStorage.setItem('prefers', JSON.stringify(prefers))
-        alert(`${movie.title} aggiunto ai preferiti!`)
+        setIsFavorite(prefers.some(fav => fav.id === movie.id))
+    },[movie.id])
+
+    // Funzione per aggiungere o rimuovere film dai preferiti
+    const toggleFavorite = () => {
+        const prefers = JSON.parse(localStorage.getItem('prefers')) || []
+
+        if(isFavorite) {
+
+            // Rimuovi film dai preferiti
+            const updatedPrefers = prefers.filter(fav => fav.id !== movie.id)
+            localStorage.setItem('prefers', JSON.stringify(updatedPrefers))
+            setIsFavorite(false)
+            alert(`${movie.title} rimosso dai preferiti!`)
+
+        } else {
+            // Aggiungi film ai preferiti
+            const updatedPrefers = [...prefers, movie]
+            localStorage.setItem('prefers', JSON.stringify(updatedPrefers))
+            setIsFavorite(true)
+            alert(`${movie.title} aggiunto ai preferiti!`)
+        }
     }
     
     return(
@@ -13,7 +35,12 @@ function MovieCard({ movie }) {
             <img src={movie.posterUrl || "https://via.placeholder.com/210x295?text=No+Image"} alt={`Poster del film {movie.title}`} /> 
             <h3>{movie.title}</h3>
             <p>{movie.year}</p>
-            <button onClick={addToPrefers} aria-label={`Aggiungi ${movie.title} ai preferiti`}>Aggiungi ai preferiti</button>
+            <button 
+               onClick={toggleFavorite}
+               aria-label={isFavorite ? `Rimuovi ${movie.title} dai preferiti` : `Aggiungi ${movie.title} ai preferiti`}>
+
+                {isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
+            </button>
         </div>
     )
 }
