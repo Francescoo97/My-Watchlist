@@ -9,7 +9,5 @@ Web app dinamica per cercare e salvare i tuoi film preferiti. Sviluppata con **R
 - 📱 **Responsive design** per desktop, tablet e mobile
 - ⏳ **Loading e gestione errori** per le chiamate API
 
-## Come usare il progetto
-1. Clona il repository
-2. Installa le dipendenze:
+
 
