@@ -1,0 +1,91 @@
+import { useState, useEffect } from "react"
+import MovieCard from "./MovieCard"
+
+type MovieListProps = {
+    searchTerm: string
+}
+
+type Movie = {
+    id: string;
+    title: string;
+    year: string;
+    posterUrl: string
+}
+
+type OmdbMovie = {
+    imdbID: string;
+    Title: string;
+    Year: string;
+    Poster: string
+}
+
+type OmdbResponse = {
+    Response: 'True' | 'False';
+    Search?: OmdbMovie[] 
+}
+
+
+function MovieList({ searchTerm }: MovieListProps) {
+
+    const [movies, setMovies] = useState<Movie[]>([])
+    const [loading, setLoading] = useState<boolean>(false)
+
+    useEffect(() => {
+        if(!searchTerm) {
+            setMovies([])
+            return
+        }
+
+        setLoading(true)
+
+        // Chiave API OMDb
+        const API = import.meta.env.VITE_OMDB_KEY ?? ''
+
+        const url = `https://www.omdbapi.com/?apikey=${API}&s=${encodeURIComponent(searchTerm)}`;
+
+        // Chiamata API per cercare i film
+        fetch(url)
+        .then((res) => {
+            if(!res.ok) {
+                throw new Error('Errore nella risposta' + res.status)
+            }
+            return res.json() as Promise<OmdbResponse>
+        })
+        .then((data) => {
+            if(data.Response === 'False' || !data.Search) {
+                setMovies([])
+                return
+            }
+
+            // filtro per iniziali
+            const filteredMovies = data.Search.filter((item => 
+            item.Title.toLowerCase().startsWith(searchTerm.toLowerCase()))
+            )
+
+            const movieData = filteredMovies.map((item => ({
+                id: item.imdbID,
+                title: item.Title,
+                year: item.Year,
+                posterUrl: item.Poster !== 'N/A' ? item.Poster : "https://via.placeholder.com/210x295?text=No+Image",
+            })))
+
+            setMovies(movieData)
+        })
+        .catch((err) => console.log('Error', err))
+        .finally(() => setLoading(false))
+
+    }, [searchTerm])
+
+    return (
+        <div className="movie-grid">
+            {loading && <p className="load-message">Caricamento...</p>}
+            {!loading && movies.length === 0 && searchTerm && (<p className="load-message">Nessun film trovato!</p>)}
+            {movies.map(movie => (
+                <MovieCard key={movie.id} movie={movie} />
+            ))}
+        </div>
+    )
+
+}
+
+export default MovieList 
