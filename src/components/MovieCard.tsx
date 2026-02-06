@@ -1,17 +1,28 @@
 import { useState, useEffect } from "react"
 
-function MovieCard({ movie }) {
+type Movie = {
+    id: string;
+    title: string;
+    year: string;
+    posterUrl: string
+}
 
-    const [isFavorite, setIsFavorite] = useState(false)
+type MovieCardProps = {
+    movie: Movie
+}
+
+function MovieCard({ movie }: MovieCardProps) {
+
+    const [isFavorite, setIsFavorite] = useState<boolean>(false)
 
     useEffect(() => {
-        const prefers = JSON.parse(localStorage.getItem('prefers')) || []
+        const prefers: Movie[] = JSON.parse(localStorage.getItem('prefers') || '[]') 
         setIsFavorite(prefers.some(fav => fav.id === movie.id))
     },[movie.id])
 
     // Funzione per aggiungere o rimuovere film dai preferiti
     const toggleFavorite = () => {
-        const prefers = JSON.parse(localStorage.getItem('prefers')) || []
+        const prefers: Movie[] = JSON.parse(localStorage.getItem('prefers') || '[]') 
 
         if(isFavorite) {
 
@@ -32,7 +43,7 @@ function MovieCard({ movie }) {
     
     return(
         <div>
-            <img src={movie.posterUrl || "https://via.placeholder.com/210x295?text=No+Image"} alt={`Poster del film {movie.title}`} /> 
+            <img src={movie.posterUrl || "https://via.placeholder.com/210x295?text=No+Image"} alt={`Poster del film ${movie.title}`} /> 
             <h3>{movie.title}</h3>
             <p>{movie.year}</p>
             <button 
