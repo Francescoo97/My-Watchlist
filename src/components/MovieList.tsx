@@ -39,7 +39,7 @@ function MovieList({ searchTerm }: MovieListProps) {
         setLoading(true)
 
         // Chiave API OMDb
-        const API = import.meta.env.VITE_OMDB_KEY ?? ''
+        const API = import.meta.env.VITE_OMDB_API_KEY ?? ''
 
         const url = `https://www.omdbapi.com/?apikey=${API}&s=${encodeURIComponent(searchTerm)}`;
 
