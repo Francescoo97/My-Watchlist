@@ -57,10 +57,9 @@ function MovieList({ searchTerm }: MovieListProps) {
                 return
             }
 
-            // filtro per iniziali
-            const filteredMovies = data.Search.filter((item => 
-            item.Title.toLowerCase().startsWith(searchTerm.toLowerCase()))
-            )
+            // Filtro film
+            const filteredMovies = data.Search
+
 
             const movieData = filteredMovies.map((item => ({
                 id: item.imdbID,
