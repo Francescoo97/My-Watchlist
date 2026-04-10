@@ -1,3 +1,5 @@
 # My-Watchlist
 
-Watchlist dinamica per cercare e salvarei tuoi film preferiti. Responsive, con salvataggio in Local Storage, sviluppata con React + Vite.
+Watchlist dinamica per cercare e salvare i tuoi film preferiti. Sviluppata con React + Typescript + Vite, con salvataggio in Local Storage.
+Layout responsive e mobile first
+Ricerca film tramite OMDb API
